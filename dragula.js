@@ -19,6 +19,7 @@ function dragula (initialContainers, options) {
   var _offsetY; // reference y
   var _moveX; // reference move x
   var _moveY; // reference move y
+  var _initialLeft; // store initial Left pos to lock scroll
   var _initialSibling; // reference sibling when grabbed
   var _currentSibling; // reference sibling now
   var _copy; // item used for copying
@@ -92,7 +93,7 @@ function dragula (initialContainers, options) {
   }
 
   function grab (e) {
-    _moveX = e.clientX;
+    _moveX = _initialLeft = e.clientX;
     _moveY = e.clientY;
 
     var ignore = whichMouseButton(e) !== 1 || e.metaKey || e.ctrlKey;
@@ -365,7 +366,11 @@ function dragula (initialContainers, options) {
     var x = clientX - _offsetX;
     var y = clientY - _offsetY;
 
-    _mirror.style.left = x + 'px';
+    if (_initialLeft) {
+      _mirror.style.left = _initialLeft;
+    } else {
+       _mirror.style.left = x + 'px';
+    }
     _mirror.style.top = y + 'px';
 
     var item = _copy || _item;
